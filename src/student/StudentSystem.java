@@ -8,7 +8,7 @@ public class StudentSystem {
         //boolean flag=true;
         ArrayList<Student> list = new ArrayList<>();
         Student s1 = new Student("1", "小明", 21, "广西");
-        Student s2 = new Student("2", "李华", 19, "河北");
+        Student s2 = new Student("2", "李华", 11, "河北");
         Student s3 = new Student("3", "小李", 18, "陕西");
         Student s4 = new Student("4", "思思", 19, "广东");
         list.add(s1);
