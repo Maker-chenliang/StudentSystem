@@ -1,5 +1,7 @@
 package student;
 
+import test1.user;
+
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -15,6 +17,11 @@ public class StudentSystem {
         list.add(s2);
         list.add(s3);
         list.add(s4);
+        ArrayList<User> User = new ArrayList<>();
+        User u1 = new User("xiaoxiao111", "123456", "17171717171717171X", "17787878721");
+        User.add(u1);
+
+        USER(User);
         loop:
         while (true) {
             System.out.println("");
@@ -59,46 +66,324 @@ public class StudentSystem {
 
     }
 
+    //用户
+    public static void USER(ArrayList<User> user) {
+
+        System.out.println("学生管理系统");
+        int O = 0, w = -1;
+
+        loop:
+        while (true) {
+            System.out.println("1.登录");
+            System.out.println("2.注册");
+            System.out.println("请输入你的选择");
+            Scanner u = new Scanner(System.in);
+            int c = u.nextInt();
+            switch (c) {
+                case 2 -> {
+                    System.out.println("注册");
+                    register(user);
+                }
+                case 1 -> {
+                    System.out.println("登录");
+                    if (login(user)) {
+                        w = checkip(user, O);
+                        if (w >= 0) {
+                            boolean W = checkpass(user, w);
+                            if (W) {
+                                System.out.println("登录成功");
+                                break loop;
+                            }
+                        }
+                    } else {
+                        System.out.println("该用户不存在，请先注册");
+                        continue;
+                    }
+                }
+                default -> System.out.println("没有这个选项,请重新输入");
+            }
+        }
+
+    }
+
+    //检验密码是否正确
+    public static boolean checkpass(ArrayList<User> user4, int O) {
+        Scanner u = new Scanner(System.in);
+        String password = null;
+        User q = user4.get(O);
+        String passwordcheck1 = q.getPassword();
+        while (true) {
+            System.out.println("请输入password");
+            password = u.next();
+            if (passwordcheck1.equals(password)) {
+                return true;
+            } else {
+                System.out.println("password输入有误，请重新输入");
+                continue;
+            }
+        }
+    }
+
+    //验证用户personid phoneNumber是否正确
+    public static int checkip(ArrayList<User> user3, int o) {
+        Scanner u = new Scanner(System.in);
+        System.out.println("personid长度为18位，不能以0为开头，前17位必须都是数字，最后一位可以是数字，也可以是X");
+        System.out.println("phonenumber长度为11位，不能以0开头，必须都是数字");
+        String input;
+        String info[] = null;
+        while (true) {
+            loop:
+            while (true) {
+                System.out.println("请分别输入personid phonenumber");
+                input = u.nextLine();
+                info = input.split(" ");
+                boolean inputid = check3(info[0]);
+                if (!inputid) {
+                    System.out.println("personid输入格式错误，请重新输入");
+                    continue;
+                }
+
+                if (!check2(info[1], 2)) {
+                    System.out.println("personnumber输入格式错误，请重新输入");
+                    continue;
+                }
+                break loop;
+            }
+            int I = 0, j = 0;
+            for (o = 0; o < user3.size(); o++) {
+                User u1 = user3.get(o);
+                String ph = u1.getPhoneNumber();
+                String pi = u1.getPersonid();
+                if (ph.equals(info[1])) {
+                    I = 1;
+                }
+                if (pi.equals(info[0])) {
+                    j = 1;
+                }
+                if (I == 1 && j == 1) {
+                    return o;
+                }
+            }
+
+            if (I != 1) {
+                System.out.println("用户phonenumber输入错误，请重新输入");
+            }
+            if (j != 1) {
+                System.out.println("用户personid输入错误，请重新输入");
+            }
+            continue;
+        }
+
+    }
+
+    //验证用户名是否存在
+    public static boolean login(ArrayList<User> user2) {
+        System.out.println("id唯一，长度在3到15位之间，只能是字母加数字组合，但不能全是数字");
+        Scanner u = new Scanner(System.in);
+        String logid, oldid, newid=null;
+        while (true) {
+            System.out.println("请输入你的用户名");
+            logid = u.next();
+            newid = logid;
+            if ((newid.length() >= 3 && newid.length() <= 15) && check2(newid, 1)) {
+                u.nextLine();
+            }else{System.out.println("用户id输入错误，请重新输入");
+            continue;}
+            for (int i = 0; i < user2.size(); i++) {
+                User u1 = user2.get(i);
+                oldid = u1.getUsername();
+
+                if (newid.equals(oldid)) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+    }
+
+
+    //用户注册
+    public static void register(ArrayList<User> user1) {
+        Scanner u = new Scanner(System.in);
+        System.out.println("id唯一，长度在3到15位之间，只能是字母加数字组合，但不能全是数字");
+        System.out.println("personid长度为18位，不能以0为开头，前17位必须都是数字，最后一位可以是数字，也可以是X");
+        System.out.println("phonenumber长度为11位，不能以0开头，必须都是数字");
+        String info[] = null;
+        boolean flag = true;
+        int I = 0;
+        loop:
+        while (flag) {
+            System.out.println("请分别输入你要注册的用户id,password,personid,phoneNumber,中间用空格隔开");
+            System.out.println("");
+            String input = u.nextLine();
+            info = input.split(" ");
+            if (info.length != 4) {
+                System.out.println("输入格式有误，请重新输入");
+                System.out.println("");
+                continue;
+            }
+            boolean a = check6(info, user1), c = check5(info), b = check4(info);
+            if (a && b && c) {
+                System.out.println("注册成功");
+                User o = new User();
+                o.setUsername(info[0]);
+                o.setPassword(info[1]);
+                o.setPersonid(info[2]);
+                o.setPhoneNumber(info[3]);
+                user1.add(o);
+                break loop;
+            }
+            if (a == false) {
+                System.out.println("用户Id输入错误或者是该用户id已经存在，请重新输入");
+            }
+            if (b == false) {
+                System.out.println("用户personid输入错误，请重新输入");
+            }
+            if (c == false) {
+                System.out.println("用户phoneNumber输入错误，请重新输入");
+            }
+            System.out.println("");
+        }
+
+    }
+
+    //核验id
+    public static boolean check6(String info[], ArrayList<User> user3) {
+
+        for (int i = 0; i < user3.size(); i++) {
+            User u1 = user3.get(i);
+            String oldid = u1.getUsername();
+            String newid = info[0];
+            if (!newid.equals(oldid) && (newid.length() >= 3 && newid.length() <= 15) && check2(newid, 1)) {
+
+                return true;
+            }
+
+        }
+        return false;
+    }
+
+    //检验手机号
+    public static boolean check5(String info[]) {
+        String newphonenumber = info[3];
+        if (newphonenumber.length() != 11) {
+            return false;
+        }
+        if (check2(newphonenumber, 2)) {
+
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    //检验personid
+    public static boolean check4(String info[]) {
+        String newpersonid = info[2];
+        if (check3(newpersonid)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    //检验数字字母组合和手机号
+    public static boolean check2(String Newid, int I) {
+        switch (I) {
+            case 1 -> {
+                char arr[] = Newid.toCharArray();
+                int i1 = 0;
+                for (int i = 0; i < Newid.length(); i++) {
+                    char a = arr[i];
+                    if (a >= '0' && a <= '9') {
+                        i1++;
+                    }
+                    if ((a >= '0' && a <= '9') || (a >= 'A' && a <= 'Z') || (a >= 'a' && a <= 'z')) {
+
+                    } else {
+                        return false;
+                    }
+                }
+                if (i1 == Newid.length()) {
+                    return false;
+                }
+                return true;
+            }
+            case 2 -> {
+                char arr1[] = Newid.toCharArray();
+                for (int i = 1; i < Newid.length(); i++) {
+                    char a = arr1[i];
+                    if ((a <= '0' || a >= '9') || Newid.length() != 11 || arr1[0] == '0') {
+                        return false;
+                    }
+                }
+                return true;
+            }
+        }
+        return true;
+    }
+
+    //检验身份证号码personid
+    public static boolean check3(String Oldpersonid) {
+        char arr[] = Oldpersonid.toCharArray();
+        if (Oldpersonid.length() != 18 || arr[0] == '0') {
+            return false;
+        }
+        for (int i = 0; i < Oldpersonid.length() - 1; i++) {
+            char a = arr[i];
+            if (a < '0' || a > '9') {
+                return false;
+            }
+
+        }
+        if ((arr[17] <= '9' && arr[17] >= '0') || arr[17] == 'x' || arr[17] == 'X') {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+
     //添加学生信息
     public static void add(ArrayList<Student> list1) {
         Scanner u = new Scanner(System.in);
         Student s1 = new Student();
-        String[] info=null;
-        boolean flag=true;
-        loop:while(flag)
-        {
-            boolean Flag=false;
+        String[] info = null;
+        boolean flag = true;
+        loop:
+        while (flag) {
+            boolean Flag = false;
             System.out.println("请分别输入你要录入的学生Id，name，age，addres，中间用空格隔开");
             String input = u.nextLine();
-            info=input.split(" ");
-            if(info.length!=4){
+            info = input.split(" ");
+            if (info.length != 4) {
                 System.out.println("输入格式有误，请重新输入");
                 continue;
             }
-            String newid=info[0];
-            for(int i=0;i<list1.size();i++)
-            {
-                Student s2=list1.get(i);
-                String oldid=s2.getId();
-                if(newid.equals(oldid)){
-                    Flag=true;
+            String newid = info[0];
+            for (int i = 0; i < list1.size(); i++) {
+                Student s2 = list1.get(i);
+                String oldid = s2.getId();
+                if (newid.equals(oldid)) {
+                    Flag = true;
                     break;
                 }
             }
-            if(Flag){
+            if (Flag) {
                 System.out.println("该id已经存在，请重新输入");
-            }else{
-                flag=false;
+            } else {
+                flag = false;
             }
         }//
-        try{
+        try {
             s1.setId(info[0]);
             s1.setName(info[1]);
             s1.setAge(Integer.parseInt(info[2]));
             s1.setAddres(info[3]);
             list1.add(s1);
             System.out.println("学生信息添加成功");
-        }catch (NumberFormatException e) {
+        } catch (NumberFormatException e) {
             System.out.println("年龄格式错误，请输入数字");
         } catch (Exception e) {
             System.out.println("添加失败：" + e.getMessage());
@@ -196,7 +481,7 @@ public class StudentSystem {
 //            }
 //            System.out.println("找不到该学生信息，删除失败，请重新输入Id");
         // }
-        while(true) {
+        while (true) {
             System.out.println("请输入你的操作");
             System.out.println("1.修改学生id 2.修改学生name 3.修改学生age 4.修改学生address");
             int j = u.nextInt();
@@ -247,7 +532,9 @@ public class StudentSystem {
             }
             if (To()) {
                 update(list4);
-            }else{break;}
+            } else {
+                break;
+            }
         }
     }
 
@@ -272,7 +559,7 @@ public class StudentSystem {
         loop:
         while (true) {
             Scanner u = new Scanner(System.in);
-            String id1=u.next();
+            String id1 = u.next();
             for (i = 0; i < list5.size(); i++) {
                 Student s = list5.get(i);
                 String id = s.getId();
@@ -290,4 +577,5 @@ public class StudentSystem {
 
 
 }
+
 
